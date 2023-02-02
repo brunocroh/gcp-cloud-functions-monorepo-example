@@ -1,0 +1,58 @@
+steps:
+  - name: "gcr.io/cloud-builders/git"
+    secretEnv: ["SSH_KEY"]
+    entrypoint: "bash"
+    args:
+      - -c
+      - |
+        echo "$$SSH_KEY" >> /root/.ssh/id_rsa
+        chmod 400 /root/.ssh/id_rsa
+        cp known_hosts.github /root/.ssh/known_hosts
+        cat /root/.ssh/known_hosts
+    volumes:
+      - name: "ssh"
+        path: /root/.ssh
+
+  # Clone the repository
+  - name: "gcr.io/cloud-builders/git"
+    args:
+      - clone
+      - --recurse-submodules
+      - git@github.com:brunocroh/gcp-cloud-functions-monorepo-example
+    volumes:
+      - name: "ssh"
+        path: /root/.ssh
+
+  - name: "gcr.io/cloud-builders/git"
+    entrypoint: /bin/bash
+    args:
+      - -c
+      - |
+        eval `ssh-agent -s`
+        ssh-add
+        cd gcp-cloud-functions-monorepo-example
+        git status
+        git --no-pager diff --name-only HEAD~1 | grep "/" | cut -d/ -f2 | sort | uniq > /workspace/diff.txt
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: /bin/bash
+    args:
+      - -c
+      - |
+        while read line
+        do 
+        config="./functions/${line}/cloudbuild.yaml"
+        echo $config
+        if [[ ! -f "${config}" ]]; then
+         echo "no such file"
+         continue
+        fi
+        gcloud builds submit --config=${config} --region=us-central1
+        done < /workspace/diff.txt
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/883640035765/secrets/github_ssh/versions/1
+      env: "SSH_KEY"
+options:
+  logging: CLOUD_LOGGING_ONLY

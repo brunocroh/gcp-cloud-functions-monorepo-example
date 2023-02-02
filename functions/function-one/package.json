@@ -1,0 +1,19 @@
+{
+  "name": "function-one",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node dist/index.js"
+  },
+  "private": true,
+  "author": "Bruno Pinheiro",
+  "license": "ISC",
+  "dependencies": {
+    "firebase-admin": "^11.5.0",
+    "firebase-functions": "^4.2.0",
+    "tsconfig": "*",
+    "typescript": "^4.9.5"
+  }
+}

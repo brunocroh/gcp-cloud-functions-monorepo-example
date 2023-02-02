@@ -1,0 +1,36 @@
+steps:
+  - name: node:16
+    entrypoint: npm
+    args: ["install", "-g", "npm@7"]
+
+  - name: node:16
+    entrypoint: npm
+    args: ["install", "-w", "function-two"]
+
+  - name: node:16
+    id: "cloud-function-build"
+    entrypoint: npx
+    args: ["turbo", "run", "build", "--filter=function-two"]
+
+  - name: "bash"
+    args:
+      [
+        cp,
+        "functions/function-two/package.json",
+        "functions/function-two/dist/",
+      ]
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    waitFor: ["cloud-function-build"]
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - >
+        gcloud beta functions deploy function-two
+        --source functions/function-two/dist/
+        --trigger-http
+        --allow-unauthenticated
+        --runtime nodejs16
+        --timeout 150s
+        --memory 512Mi
+        --entry-point functionTwo
