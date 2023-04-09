@@ -4,8 +4,8 @@
 
 the root cloudbuild.yaml, use git diff to identify changes on functions folder, and deploy only functions changed since last commit.
 
-To works, each funciton need has your cloudbuild.yaml.
-Works with GCP Scheduler too.
+To works, each function need has your cloudbuild.yaml.
+You can use each cloudbuld.yml of functions to write all dependencies like GCP Scheduler, Pubsub Topics, and etc...
 
 ## Stack
 
@@ -16,3 +16,5 @@ Works with GCP Scheduler too.
 - GCP Cloud functions
 
 More details about how it works soon
+
+quentions, DM me on [Twitter](https://twitter.com/brunocroh)
