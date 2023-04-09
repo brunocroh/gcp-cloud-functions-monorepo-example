@@ -2,7 +2,7 @@
 
 ## Idea
 
-the root cloudbuild.yaml, use git ref to identify changes on functions folder, and deploy only functions changed since last commit.
+the root cloudbuild.yaml, use git diff to identify changes on functions folder, and deploy only functions changed since last commit.
 
 To works, each funciton need has your cloudbuild.yaml.
 Works with GCP Scheduler too.
