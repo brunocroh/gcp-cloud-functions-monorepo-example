@@ -17,4 +17,4 @@ You can use each cloudbuld.yml of functions to write all dependencies like GCP S
 
 More details about how it works soon
 
-quentions, DM me on [Twitter](https://twitter.com/brunocroh)
+questions DM me on [Twitter](https://twitter.com/brunocroh)
